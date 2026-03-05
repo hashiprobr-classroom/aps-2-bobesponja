@@ -36,6 +36,21 @@ void nft_inverse(complex t[], complex s[], int n) {
 }
 
 void fft(complex s[], complex t[], int n, int sign) {
+    complex lista_1[n/2];
+    complex lista_2[n/2];
+    int cont = 0;
+    int cont_1 = 1;
+    for(int i = 0; i<(n/2); i++){
+        lista_1[i] = s[cont];
+        cont+=2;
+    }
+    for(int j = 0; j<(n/2); j++){
+        lista_1[j] = s[cont_1];
+        cont_1+=2;
+    }
+    for(int k = 0; k<(n/2); k++){
+        
+    }
     // usar duas listas uma so com os pares e outra so com impares(indices) da lista original
     //  usar o negocio do cosseno e seno que nem no nft pq n podemos usar exp
 }
