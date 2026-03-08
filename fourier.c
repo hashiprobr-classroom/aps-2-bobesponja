@@ -34,23 +34,40 @@ void nft_inverse(complex t[], complex s[], int n) {
     nft(t, s, n, 1);
     normalize(s, n);
 }
+void banana(complex s[], complex t[], int n, int sign, int posi){
+    if(n==0){
+        return;
+    }
+    t[n-1].a = 0;
+    t[n-1].b = 0;
+    for (int j = 0; j < n; j++) {
+        double x = sign * 2 * PI * (n-1) * j / n;
 
+        double cosx = cos(x);
+        double sinx = sin(x);
+
+        t[n-1].a += s[j].a * cosx - s[j].b * sinx;
+        t[n-1].b += s[j].a * sinx + s[j].b * cosx;
+    }
+    banana(s,t,n-1,sign);
+}
 void fft(complex s[], complex t[], int n, int sign) {
-    complex lista_1[n/2];
-    complex lista_2[n/2];
-    int cont = 0;
-    int cont_1 = 1;
-    for(int i = 0; i<(n/2); i++){
-        lista_1[i] = s[cont];
-        cont+=2;
-    }
-    for(int j = 0; j<(n/2); j++){
-        lista_1[j] = s[cont_1];
-        cont_1+=2;
-    }
-    for(int k = 0; k<(n/2); k++){
-        
-    }
+        complex lista_s_1[n/2];
+        complex lista_s_2[n/2];
+        complex lista_t_1[n/2];
+        complex lista_t_2[n/2];
+        int cont = 0;
+        int cont_1 = 1;
+            for(int i = 0; i<(n/2); i++){
+            lista_s_1[i] = s[cont];
+            cont+=2;
+        }
+        for(int j = 0; j<(n/2); j++){
+            lista_s_2[j] = s[cont_1];
+            cont_1+=2;
+        }
+        banana(lista_s_1,lista_t_1,(n/2),sign);
+        banana(lista_s_2,lista_t_2,(n/2),sign);
     // usar duas listas uma so com os pares e outra so com impares(indices) da lista original
     //  usar o negocio do cosseno e seno que nem no nft pq n podemos usar exp
 }
