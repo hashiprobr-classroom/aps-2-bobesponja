@@ -106,24 +106,23 @@ void fft_inverse(complex t[], complex s[], int n) {
 void fft_forward_2d(complex matrix[MAX_SIZE][MAX_SIZE], int width, int height) {
     // matrix[heigh][width]
     complex matrix_temp[width][height];
-    for(int i = 0; i<height; i++){
-    for(int j = 0; j<width; j++){
-        matrix_temp[i][j]=matrix[j][i];
+    for(int j = 0; j<=width; j++){
+     for(int i = 0; i<=height; i++){
+        matrix_temp[j][i]=matrix[i][j];
     }
     }
     complex matrix_temp_1[width][height];
     for(int linha = 0; linha<width;linha++){
-        fft_forward(matrix_temp_1[linha],matrix_temp[linha],height);
+        fft_forward(matrix_temp[linha],matrix_temp_1[linha],height);
     }
-    // for(int j_1 = 0; j_1<width; j_1++){
-    //     for(int i_1 = 0; i_1<height; i_1++){
-    //         matrix[j_1][i_1]=matrix_temp_1[i_1][j_1];
-    //     }
-    // }
-
+    // desinverta a matrix e aplique a fft_foward em cada linha
 }
 
 void fft_inverse_2d(complex matrix[MAX_SIZE][MAX_SIZE], int width, int height) {
+    // faca um loop e chame fft_inverse para cada linha da matrix
+    // faz a coluna ser linha e vice versa
+    // faz loop e chame fft inverse
+    // desfaca a inversao
 }
 
 void filter(complex input[MAX_SIZE][MAX_SIZE], complex output[MAX_SIZE][MAX_SIZE], int width, int height, int flip) {
