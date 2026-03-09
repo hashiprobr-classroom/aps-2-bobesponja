@@ -34,12 +34,14 @@ void nft_inverse(complex t[], complex s[], int n) {
     nft(t, s, n, 1);
     normalize(s, n);
 }
-void banana(complex s[], complex t[], int n, int sign, int posi){
-    if(n==0){
+void banana(complex s[], complex t[], int n, int sign){
+    if(n == 0){
         return;
     }
+
     t[n-1].a = 0;
     t[n-1].b = 0;
+    
     for (int j = 0; j < n; j++) {
         double x = sign * 2 * PI * (n-1) * j / n;
 
@@ -49,7 +51,7 @@ void banana(complex s[], complex t[], int n, int sign, int posi){
         t[n-1].a += s[j].a * cosx - s[j].b * sinx;
         t[n-1].b += s[j].a * sinx + s[j].b * cosx;
     }
-    banana(s,t,n-1,sign);
+    banana(s, t, n-1, sign);
 }
 void fft(complex s[], complex t[], int n, int sign) {
         complex lista_s_1[n/2];
@@ -66,8 +68,23 @@ void fft(complex s[], complex t[], int n, int sign) {
             lista_s_2[j] = s[cont_1];
             cont_1+=2;
         }
-        banana(lista_s_1,lista_t_1,(n/2),sign);
-        banana(lista_s_2,lista_t_2,(n/2),sign);
+        banana(lista_s_1, lista_t_1, (n/2), sign);
+        banana(lista_s_2, lista_t_2, (n/2), sign);
+
+        for (int k = 0; k < n / 2; k++) {
+            double x = sign * 2 * PI * k / n;
+            double cosx = cos(x);
+            double sinx = sin(x);
+
+            double wk_ti_a = lista_t_2[k].a * cosx - lista_t_2[k].b * sinx;
+            double wk_ti_b = lista_t_2[k].a * sinx + lista_t_2[k].b * cosx;
+
+            t[k].a = lista_t_1[k].a + wk_ti_a;
+            t[k].b = lista_t_1[k].b + wk_ti_b;
+
+            t[k + n / 2].a = lista_t_1[k].a - wk_ti_a;
+            t[k + n / 2].b = lista_t_1[k].b - wk_ti_b;
+        }
     // usar duas listas uma so com os pares e outra so com impares(indices) da lista original
     //  usar o negocio do cosseno e seno que nem no nft pq n podemos usar exp
 }

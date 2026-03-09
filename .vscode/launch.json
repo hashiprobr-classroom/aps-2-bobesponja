@@ -1,20 +1,39 @@
 {
-    "configurations": [
+  "configurations": [
+    {
+      "name": "Testes de Unidade",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/unit_test",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "make_unit_test"
+    },
+    {
+      "name": "Testes de Integração",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/integration_test",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "make_integration_test"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/lorag/OneDrive - Insper - Institudo de Ensino e Pesquisa/VSC/DesProg/APS/aps-2-bobesponja",
+      "program": "c:/Users/lorag/OneDrive - Insper - Institudo de Ensino e Pesquisa/VSC/DesProg/APS/aps-2-bobesponja/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
         {
-            "name": "Testes de Unidade",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/unit_test",
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "make_unit_test"
-        },
-        {
-            "name": "Testes de Integração",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/integration_test",
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "make_integration_test"
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
         }
-    ]
+      ]
+    }
+  ]
 }
