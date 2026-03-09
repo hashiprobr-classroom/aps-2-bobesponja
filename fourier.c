@@ -43,7 +43,7 @@ void banana(complex s[], complex t[], int n, int sign){
     t[n-1].b = 0;
     
     for (int j = 0; j < n; j++) {
-        double x = sign * 2 * PI * (n-1) * j / n;
+        double x = sign * 2 * PI * (n) * j / n;
 
         double cosx = cos(x);
         double sinx = sin(x);
@@ -54,6 +54,9 @@ void banana(complex s[], complex t[], int n, int sign){
     banana(s, t, n-1, sign);
 }
 void fft(complex s[], complex t[], int n, int sign) {
+    if(n==1){
+        banana(s, t, n, sign);
+    }
         complex lista_s_1[n/2];
         complex lista_s_2[n/2];
         complex lista_t_1[n/2];
@@ -70,8 +73,7 @@ void fft(complex s[], complex t[], int n, int sign) {
         }
         banana(lista_s_1, lista_t_1, (n/2), sign);
         banana(lista_s_2, lista_t_2, (n/2), sign);
-
-        for (int k = 0; k < n / 2; k++) {
+        for (int k = 0; k <( n / 2); k++) {
             double x = sign * 2 * PI * k / n;
             double cosx = cos(x);
             double sinx = sin(x);
