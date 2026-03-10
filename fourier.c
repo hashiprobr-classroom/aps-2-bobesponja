@@ -88,10 +88,6 @@ void fft(complex s[], complex t[], int n, int sign) {
         t[k + n / 2].a = lista_t_1[k].a - wk_ti_a;
         t[k + n / 2].b = lista_t_1[k].b - wk_ti_b;
     }
-    // regr(s,t,n,sign,n);
-
-    // usar duas listas uma so com os pares e outra so com impares(indices) da lista original
-    //  usar o negocio do cosseno e seno que nem no nft pq n podemos usar exp
 }
 
 void fft_forward(complex s[], complex t[], int n) {
