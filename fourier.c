@@ -34,29 +34,13 @@ void nft_inverse(complex t[], complex s[], int n) {
     nft(t, s, n, 1);
     normalize(s, n);
 }
-void regr(complex s[], complex t[], int n, int sign, int total) {
-    if (n == 0) {
+
+void fft(complex s[], complex t[], int n, int sign) {
+    if (n == 1) {
+        t[0] = s[0];
         return;
     }
 
-    t[n - 1].a = 0;
-    t[n - 1].b = 0;
-
-    for (int j = 0; j < total; j++) {
-        double x = sign * 2 * PI * (double)(n - 1) * j / (double)total;
-
-        double cosx = cos(x);
-        double sinx = sin(x);
-
-        t[n - 1].a += s[j].a * cosx - s[j].b * sinx;
-        t[n - 1].b += s[j].a * sinx + s[j].b * cosx;
-    }
-    regr(s, t, n - 1, sign, total);
-}
-void fft(complex s[], complex t[], int n, int sign) {
-    if (n == 1) {
-        regr(s, t, n, sign, n);
-    }
     complex lista_s_1[n / 2];
     complex lista_s_2[n / 2];
     complex lista_t_1[n / 2];
@@ -71,9 +55,12 @@ void fft(complex s[], complex t[], int n, int sign) {
         lista_s_2[j] = s[cont_1];
         cont_1 += 2;
     }
+
     int metade = n / 2;
-    regr(lista_s_1, lista_t_1, (metade), sign, (metade));
-    regr(lista_s_2, lista_t_2, (metade), sign, (metade));
+
+    fft(lista_s_1, lista_t_1, metade, sign);
+    fft(lista_s_2, lista_t_2, metade, sign);
+    
     for (int k = 0; k < (n / 2); k++) {
         double x = (sign * 2 * PI * k) / n;
         double cosx = cos(x);
