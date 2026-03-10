@@ -34,61 +34,61 @@ void nft_inverse(complex t[], complex s[], int n) {
     nft(t, s, n, 1);
     normalize(s, n);
 }
-void regr(complex s[], complex t[], int n, int sign, int total){
-    if(n == 0){
+void regr(complex s[], complex t[], int n, int sign, int total) {
+    if (n == 0) {
         return;
     }
 
-    t[n-1].a = 0;
-    t[n-1].b = 0;
-    
-    for (int j = 0; j <total; j++) {
-        double x = sign * 2 * PI * (double)(n-1) * j / (double)total;
+    t[n - 1].a = 0;
+    t[n - 1].b = 0;
+
+    for (int j = 0; j < total; j++) {
+        double x = sign * 2 * PI * (double)(n - 1) * j / (double)total;
 
         double cosx = cos(x);
         double sinx = sin(x);
 
-        t[n-1].a += s[j].a * cosx - s[j].b * sinx;
-        t[n-1].b += s[j].a * sinx + s[j].b * cosx;
+        t[n - 1].a += s[j].a * cosx - s[j].b * sinx;
+        t[n - 1].b += s[j].a * sinx + s[j].b * cosx;
     }
-    regr(s, t, n-1, sign, total);
+    regr(s, t, n - 1, sign, total);
 }
 void fft(complex s[], complex t[], int n, int sign) {
-    if(n==1){
+    if (n == 1) {
         regr(s, t, n, sign, n);
     }
-        complex lista_s_1[n/2];
-        complex lista_s_2[n/2];
-        complex lista_t_1[n/2];
-        complex lista_t_2[n/2];
-        int cont = 0;
-        int cont_1 = 1;
-            for(int i = 0; i<(n/2); i++){
-            lista_s_1[i] = s[cont];
-            cont+=2;
-        }
-        for(int j = 0; j<(n/2); j++){
-            lista_s_2[j] = s[cont_1];
-            cont_1+=2;
-        }
-        int metade = n/2;
-        regr(lista_s_1, lista_t_1, (metade), sign, (metade));
-        regr(lista_s_2, lista_t_2, (metade), sign, (metade));
-        for (int k = 0; k <( n / 2); k++) {
-            double x = (sign * 2 * PI * k) / n;
-            double cosx = cos(x);
-            double sinx = sin(x);
+    complex lista_s_1[n / 2];
+    complex lista_s_2[n / 2];
+    complex lista_t_1[n / 2];
+    complex lista_t_2[n / 2];
+    int cont = 0;
+    int cont_1 = 1;
+    for (int i = 0; i < (n / 2); i++) {
+        lista_s_1[i] = s[cont];
+        cont += 2;
+    }
+    for (int j = 0; j < (n / 2); j++) {
+        lista_s_2[j] = s[cont_1];
+        cont_1 += 2;
+    }
+    int metade = n / 2;
+    regr(lista_s_1, lista_t_1, (metade), sign, (metade));
+    regr(lista_s_2, lista_t_2, (metade), sign, (metade));
+    for (int k = 0; k < (n / 2); k++) {
+        double x = (sign * 2 * PI * k) / n;
+        double cosx = cos(x);
+        double sinx = sin(x);
 
-            double wk_ti_a = lista_t_2[k].a * cosx - lista_t_2[k].b * sinx;
-            double wk_ti_b = lista_t_2[k].a * sinx + lista_t_2[k].b * cosx;
+        double wk_ti_a = lista_t_2[k].a * cosx - lista_t_2[k].b * sinx;
+        double wk_ti_b = lista_t_2[k].a * sinx + lista_t_2[k].b * cosx;
 
-            t[k].a = lista_t_1[k].a + wk_ti_a;
-            t[k].b = lista_t_1[k].b + wk_ti_b;
+        t[k].a = lista_t_1[k].a + wk_ti_a;
+        t[k].b = lista_t_1[k].b + wk_ti_b;
 
-            t[k + n / 2].a = lista_t_1[k].a - wk_ti_a;
-            t[k + n / 2].b = lista_t_1[k].b - wk_ti_b;
-        }
-        // regr(s,t,n,sign,n);
+        t[k + n / 2].a = lista_t_1[k].a - wk_ti_a;
+        t[k + n / 2].b = lista_t_1[k].b - wk_ti_b;
+    }
+    // regr(s,t,n,sign,n);
 
     // usar duas listas uma so com os pares e outra so com impares(indices) da lista original
     //  usar o negocio do cosseno e seno que nem no nft pq n podemos usar exp
@@ -104,25 +104,51 @@ void fft_inverse(complex t[], complex s[], int n) {
 }
 
 void fft_forward_2d(complex matrix[MAX_SIZE][MAX_SIZE], int width, int height) {
-    // matrix[heigh][width]
-    complex matrix_temp[width][height];
-    for(int j = 0; j<=width; j++){
-     for(int i = 0; i<=height; i++){
-        matrix_temp[j][i]=matrix[i][j];
+    complex input[MAX_SIZE], output[MAX_SIZE];
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            input[x] = matrix[y][x];
+        }
+        fft_forward(input, output, width);
+        for (int x = 0; x < width; x++) {
+            matrix[y][x] = output[x];
+        }
     }
+
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            input[y] = matrix[y][x];
+        }
+        fft_forward(input, output, height);
+        for (int y = 0; y < height; y++) {
+            matrix[y][x] = output[y];
+        }
     }
-    complex matrix_temp_1[width][height];
-    for(int linha = 0; linha<width;linha++){
-        fft_forward(matrix_temp[linha],matrix_temp_1[linha],height);
-    }
-    // desinverta a matrix e aplique a fft_foward em cada linha
 }
 
 void fft_inverse_2d(complex matrix[MAX_SIZE][MAX_SIZE], int width, int height) {
-    // faca um loop e chame fft_inverse para cada linha da matrix
-    // faz a coluna ser linha e vice versa
-    // faz loop e chame fft inverse
-    // desfaca a inversao
+    complex input[MAX_SIZE], output[MAX_SIZE];
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            input[x] = matrix[y][x];
+        }
+        fft_inverse(input, output, width);
+        for (int x = 0; x < width; x++) {
+            matrix[y][x] = output[x];
+        }
+    }
+
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            input[y] = matrix[y][x];
+        }
+        fft_inverse(input, output, height);
+        for (int y = 0; y < height; y++) {
+            matrix[y][x] = output[y];
+        }
+    }
 }
 
 void filter(complex input[MAX_SIZE][MAX_SIZE], complex output[MAX_SIZE][MAX_SIZE], int width, int height, int flip) {
